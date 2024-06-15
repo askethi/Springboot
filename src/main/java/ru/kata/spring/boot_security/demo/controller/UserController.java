@@ -18,6 +18,12 @@ public class UserController {
         this.us = us;
     }
 
+    @GetMapping()
+    public String show(@RequestParam("username") String username, Model model) {
+        model.addAttribute("user", us.findByUsername(username));
+        return "user";
+    }
+
     @GetMapping("/admin")
     public String index(Model model) {
         model.addAttribute("users", us.listUsers());

@@ -12,6 +12,7 @@ import javax.persistence.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -44,10 +45,10 @@ public class User implements UserDetails {
    @LazyCollection(LazyCollectionOption.EXTRA)
    @Fetch(FetchMode.JOIN)
    @JoinTable(
-           name = "roles",
+           name = "user_roles",
            joinColumns = @JoinColumn(name = "user_id"),
            inverseJoinColumns = @JoinColumn(name = "role_id"))
-   private List<Role> roles;
+   private Set<Role> roles;
 
 
    public User() {}
@@ -93,6 +94,7 @@ public class User implements UserDetails {
 
    @Override
    public Collection<? extends GrantedAuthority> getAuthorities() {
+      if (roles.isEmpty()) { System.out.println("FUCK"); }
       return roles;
    }
 
