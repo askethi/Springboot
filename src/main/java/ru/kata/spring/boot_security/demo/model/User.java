@@ -1,13 +1,21 @@
 package ru.kata.spring.boot_security.demo.model;
 
-import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.context.annotation.Primary;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.*;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
 
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +29,25 @@ public class User {
 
    @Column(name = "email")
    private String email;
+
+   @Column(name = "user_name")
+   private String username;
+
+   @Column(name = "password")
+   private String password;
+
+   public void setUsername(String username) {
+      this.username = username;
+   }
+
+   @ManyToMany(fetch = FetchType.LAZY)
+   @LazyCollection(LazyCollectionOption.EXTRA)
+   @Fetch(FetchMode.JOIN)
+   @JoinTable(
+           name = "roles",
+           joinColumns = @JoinColumn(name = "user_id"),
+           inverseJoinColumns = @JoinColumn(name = "role_id"))
+   private List<Role> roles;
 
 
    public User() {}
@@ -63,17 +90,15 @@ public class User {
       this.email = email;
    }
 
+
    @Override
-   public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
-      User user = (User) o;
-      return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email);
+   public Collection<? extends GrantedAuthority> getAuthorities() {
+      return roles;
    }
 
    @Override
-   public int hashCode() {
-      return Objects.hash(id, firstName, lastName, email);
+   public String getPassword() {
+      return this.password;
    }
 
    @Override
@@ -83,6 +108,33 @@ public class User {
               ", firstName='" + firstName + '\'' +
               ", lastName='" + lastName + '\'' +
               ", email='" + email + '\'' +
+              ", roles=" + roles +
+              ", username='" + username + '\'' +
               '}';
+   }
+
+   @Override
+   public String getUsername() {
+      return this.username;
+   }
+
+   @Override
+   public boolean isAccountNonExpired() {
+      return true;
+   }
+
+   @Override
+   public boolean isAccountNonLocked() {
+      return true;
+   }
+
+   @Override
+   public boolean isCredentialsNonExpired() {
+      return true;
+   }
+
+   @Override
+   public boolean isEnabled() {
+      return true;
    }
 }

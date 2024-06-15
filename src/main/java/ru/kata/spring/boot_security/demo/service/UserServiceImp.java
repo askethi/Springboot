@@ -4,14 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.wstrug.kataPP.dao.UserDao;
-import ru.wstrug.kataPP.model.User;
+import ru.kata.spring.boot_security.demo.dao.UserDao;
+import ru.kata.spring.boot_security.demo.model.User;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserServiceImp {
+public class UserServiceImp implements UserService{
 
 
    private final UserDao userDao;
@@ -43,6 +43,11 @@ public class UserServiceImp {
    public User getUserById(int id) {
       Optional<User> user = userDao.findById(id);
       return user.orElse(null);
+   }
+
+   @Override
+   public User findByUsername(String username) {
+      return userDao.findByUsername(username);
    }
 
 }

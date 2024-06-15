@@ -1,7 +1,7 @@
 package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.stereotype.Component;
-import ru.wstrug.kataPP.model.User;
+import ru.kata.spring.boot_security.demo.model.User;
 
 import java.util.List;
 
@@ -11,5 +11,5 @@ public interface UserService {
     void updateUserById(User user, int id);
     List<User> listUsers();
     User getUserById(int id);
-    int clean();
+    User findByUsername(String username);
 }

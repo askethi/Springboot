@@ -4,13 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.wstrug.kataPP.model.User;
-import ru.wstrug.kataPP.service.UserService;
-import ru.wstrug.kataPP.service.UserServiceImp;
-
+import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.service.UserServiceImp;
 
 @Controller
-@RequestMapping("/users")
+//@RequestMapping("/")
 public class UserController {
 
     final UserServiceImp us;
@@ -20,44 +18,49 @@ public class UserController {
         this.us = us;
     }
 
-    @GetMapping()
+    @GetMapping("/admin")
     public String index(Model model) {
         model.addAttribute("users", us.listUsers());
         return "users/index";
     }
 
-    @GetMapping("/new")
+    @GetMapping("/admin/new")
     public String newUser(@ModelAttribute("user") User user) {
         return "users/new";
     }
 
-    @PostMapping()
+    @PostMapping("/admin")
     public String create(@ModelAttribute("user") User user) {
         us.add(user);
-        return "redirect:/users";
+        return "redirect:/admin";
     }
 
-    @GetMapping("/edit")
+    @GetMapping("/admin/edit")
     public String edit(Model model, @RequestParam("id") int id) {
         model.addAttribute("user", us.getUserById(id));
         return "users/edit";
     }
 
-    @PostMapping("/")
+    @PostMapping("/admin/edit")
     public String update(@ModelAttribute("person") User user, @RequestParam("id") int id) {
         us.updateUserById(user, id);
-        return "redirect:/users";
+        return "redirect:/admin";
     }
 
-    @GetMapping("/")
+    @GetMapping("/admin/show")
     public String show(@RequestParam("id") int id, Model model) {
         model.addAttribute("user", us.getUserById(id));
         return "users/show";
     }
 
-    @PostMapping("/delete")
+    @PostMapping("/admin/delete")
     public String delete(@RequestParam("id") int id) {
         us.deleteUserById(id);
-        return "redirect:/users";
+        return "redirect:/admin";
     }
+
+//    @GetMapping("/admin")
+//    public String adminPage() {
+//        return "users/admin";
+//    }
 }
