@@ -38,7 +38,7 @@ public class User implements UserDetails {
       this.username = username;
    }
 
-   @ManyToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+   @ManyToMany(cascade=CascadeType.PERSIST, fetch = FetchType.LAZY)
    @LazyCollection(LazyCollectionOption.EXTRA)
    @Fetch(FetchMode.JOIN)
    @JoinTable(
