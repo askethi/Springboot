@@ -38,7 +38,7 @@ public class User implements UserDetails {
       this.username = username;
    }
 
-   @ManyToMany(cascade=CascadeType.MERGE, fetch = FetchType.LAZY)
+   @ManyToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
    @LazyCollection(LazyCollectionOption.EXTRA)
    @Fetch(FetchMode.JOIN)
    @JoinTable(
@@ -101,6 +101,10 @@ public class User implements UserDetails {
    public Collection<? extends GrantedAuthority> getAuthorities() {
       if (roles.isEmpty()) { System.out.println("FUCK"); }
       return roles;
+   }
+
+   public void setPassword (String password) {
+      this.password = password;
    }
 
    @Override

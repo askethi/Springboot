@@ -9,7 +9,9 @@ import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserServiceImp;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Controller
@@ -44,12 +46,16 @@ public class UserController {
 
     @PostMapping("/admin")
     public String create(@RequestParam("role") String rolestring, @ModelAttribute("user") User user) {
-        Role role = new Role();
-        rs.findByRole(rolestring);//TODO!!!!!!!!!!!!!!!
-        role.setRole(rolestring);
-        Set<Role> roles = new HashSet<>();
-        roles.add(role);
-        user.setRoles(roles);
+        Role probrole = rs.findByRole(rolestring);
+        //Optional.ofNullable(rs.findByRole(rolestring)).orElse(new Role(rolestring));
+        if (probrole == null) {
+            System.out.println(probrole);
+            Role role = new Role(rolestring);
+            role.setRole(rolestring);
+            user.setRoles(Collections.singleton(role));
+        } else {
+            user.setRoles(Collections.singleton(probrole));
+        }
         us.add(user);
         return "redirect:/admin";
     }
