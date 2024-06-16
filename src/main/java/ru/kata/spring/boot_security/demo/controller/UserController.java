@@ -4,18 +4,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.dao.RoleDao;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserServiceImp;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Controller
 //@RequestMapping("/")
 public class UserController {
 
     final UserServiceImp us;
+    final RoleDao rs;
 
     @Autowired
-    public UserController(UserServiceImp us) {
+    public UserController(UserServiceImp us, RoleDao rs) {
         this.us = us;
+        this.rs = rs;
     }
 
     @GetMapping()
@@ -36,7 +43,13 @@ public class UserController {
     }
 
     @PostMapping("/admin")
-    public String create(@ModelAttribute("user") User user) {
+    public String create(@RequestParam("role") String rolestring, @ModelAttribute("user") User user) {
+        Role role = new Role();
+        rs.findByRole(rolestring);//TODO!!!!!!!!!!!!!!!
+        role.setRole(rolestring);
+        Set<Role> roles = new HashSet<>();
+        roles.add(role);
+        user.setRoles(roles);
         us.add(user);
         return "redirect:/admin";
     }

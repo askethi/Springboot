@@ -13,5 +13,7 @@
 <p th:text="${user.getUsername()}">VALUE</p>
 <p th:text="${user.getPassword()}">VALUE</p>
 
+<div th:replace="fragments/logout :: logout"></div>
 </body>
+
 </html>

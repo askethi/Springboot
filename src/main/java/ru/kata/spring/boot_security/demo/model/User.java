@@ -9,10 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -41,7 +38,7 @@ public class User implements UserDetails {
       this.username = username;
    }
 
-   @ManyToMany(fetch = FetchType.LAZY)
+   @ManyToMany(cascade=CascadeType.MERGE, fetch = FetchType.LAZY)
    @LazyCollection(LazyCollectionOption.EXTRA)
    @Fetch(FetchMode.JOIN)
    @JoinTable(
@@ -58,6 +55,14 @@ public class User implements UserDetails {
       this.lastName = lastName;
       this.email = email;
    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public Set<Role> getRoles() {
+        return this.roles;
+    }
 
    public int getId() {
       return id;
@@ -139,4 +144,5 @@ public class User implements UserDetails {
    public boolean isEnabled() {
       return true;
    }
+
 }

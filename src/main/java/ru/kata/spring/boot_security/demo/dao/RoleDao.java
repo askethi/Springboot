@@ -7,4 +7,5 @@ import ru.kata.spring.boot_security.demo.model.User;
 
 @Repository
 public interface RoleDao extends JpaRepository<Role, Integer> {
+    Role findByRole(String role);
 }
