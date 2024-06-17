@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.dao.RoleDao;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserServiceImp;
 
 import java.util.Collections;
@@ -19,10 +20,10 @@ import java.util.Set;
 public class UserController {
 
     final UserServiceImp us;
-    final RoleDao rs;
+    final RoleService rs;
 
     @Autowired
-    public UserController(UserServiceImp us, RoleDao rs) {
+    public UserController(UserServiceImp us, RoleService rs) {
         this.us = us;
         this.rs = rs;
     }
@@ -40,12 +41,13 @@ public class UserController {
     }
 
     @GetMapping("/admin/new")
-    public String newUser(@ModelAttribute("user") User user) {
+    public String newUser(@ModelAttribute("user") User user, Model model) {
+        model.addAttribute(rs.listRoles());
         return "users/new";
     }
 
     @PostMapping("/admin")
-    public String create(@RequestParam("role") String rolestring, @ModelAttribute("user") User user) {
+    public String create(@RequestParam("role") String rolestring, @ModelAttribute User user) {
         Role probrole = rs.findByRole(rolestring);
         //Optional.ofNullable(rs.findByRole(rolestring)).orElse(new Role(rolestring));
         if (probrole == null) {
@@ -63,11 +65,14 @@ public class UserController {
     @GetMapping("/admin/edit")
     public String edit(Model model, @RequestParam("id") int id) {
         model.addAttribute("user", us.getUserById(id));
+        model.addAttribute("roles", rs.listRoles());
         return "users/edit";
     }
 
     @PostMapping("/admin/edit")
-    public String update(@ModelAttribute("person") User user, @RequestParam("id") int id) {
+    public String update(User user, @RequestParam("id") int id,
+                         @RequestParam("role") String role) {
+        user.setRoles(Collections.singleton(rs.findByRole(role)));
         us.updateUserById(user, id);
         return "redirect:/admin";
     }
