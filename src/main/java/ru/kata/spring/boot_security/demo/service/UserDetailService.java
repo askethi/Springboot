@@ -5,18 +5,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import ru.kata.spring.boot_security.demo.dao.UserDao;
-import ru.kata.spring.boot_security.demo.model.User;
-
-import java.util.Optional;
+import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
 @Service
 public class UserDetailService implements UserDetailsService {
 
-    private final UserDao ud;
+    private final UserRepository ud;
 
     @Autowired
-    public UserDetailService(UserDao ud) {
+    public UserDetailService(UserRepository ud) {
         this.ud = ud;
     }
 

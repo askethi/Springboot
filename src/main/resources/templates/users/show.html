@@ -12,6 +12,11 @@
 <p th:text="${user.getEmail()}">VALUE</p>
 <p th:text="${user.getUsername()}">VALUE</p>
 <p th:text="${user.getPassword()}">VALUE</p>
+<table>
+    <tr th:each="role : ${user.getRoles()}">
+        <td th:text="${role.getRole()}"></td>
+    </tr>
+</table>
 
 
 <a th:href="@{/admin/edit(id=${user.getId()})}">Edit</a>

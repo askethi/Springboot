@@ -1,53 +1,57 @@
 package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.dao.UserDao;
+import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 import ru.kata.spring.boot_security.demo.model.User;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 public class UserServiceImp implements UserService{
 
 
-   private final UserDao userDao;
+   private final UserRepository userRepository;
 
    @Autowired
-   UserServiceImp(UserDao userDao) {
-      this.userDao = userDao;
+   UserServiceImp(UserRepository userRepository) {
+      this.userRepository = userRepository;
    }
 
    @Transactional
+   @Override
    public void add(User user) {
-      userDao.save(user);
+      userRepository.save(user);
    }
 
    @Transactional
-   public void deleteUserById(int id) { userDao.deleteById(id); }
+   @Override
+   public void deleteUserById(int id) { userRepository.deleteById(id); }
 
-   @Transactional(readOnly = true)
+
+   @Override
    public List<User> listUsers() {
-      return userDao.findAll();
+      return userRepository.findAll();
    }
 
    @Transactional
+   @Override
    public void updateUserById(User user, int id) {
       user.setId(id);
-      userDao.save(user); }
+      userRepository.save(user); }
 
-   @Transactional
+   @Override
    public User getUserById(int id) {
-      Optional<User> user = userDao.findById(id);
+      Optional<User> user = userRepository.findById(id);
       return user.orElse(null);
    }
 
    @Override
    public User findByUsername(String username) {
-      return userDao.findByUsername(username);
+      return userRepository.findByUsername(username);
    }
 
 }
