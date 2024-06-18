@@ -39,7 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout().logoutUrl("/logout").logoutSuccessUrl("/login")
                 .permitAll();
-    }
+    } 
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {

@@ -17,15 +17,26 @@
   <input type="text" th:field="*{username}" id="username"/>
   <label for="password">Enter password: </label>
   <input type="password" th:field="*{password}" id="password"/>
-  <label for="role">Enter role: </label>
+  <p>
+    <label>Select Roles:
+      <input type="checkbox" name="roles"
+             th:each="role : ${roles}"
+             th:text="${role.getRole()}"
+             th:value="${role.id}"
+             th:field="*{roles}"
+      />
+    </label>
+  </p>
+  <!--
   <select id="role" name="role">
     <option th:each="role : ${roles}"
             th:selected="${user.getRoles().contains(role)}"
             th:text="${role.getRole()}">Role</option>
   </select>
+  -->
   <br/>
   <input type="submit" value="Update!"/>
 </form>
-
+<div th:replace="fragments/logout :: logout"></div>
 </body>
 </html>

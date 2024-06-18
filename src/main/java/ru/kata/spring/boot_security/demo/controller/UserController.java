@@ -41,23 +41,14 @@ public class UserController {
     }
 
     @GetMapping("/admin/new")
-    public String newUser(@ModelAttribute("user") User user, Model model) {
-        model.addAttribute(rs.listRoles());
+    public String newUser(Model model) {
+        model.addAttribute("user", new User());
+        model.addAttribute("roles", rs.listRoles());
         return "users/new";
     }
 
     @PostMapping("/admin")
-    public String create(@RequestParam("role") String rolestring, @ModelAttribute User user) {
-        Role probrole = rs.findByRole(rolestring);
-        //Optional.ofNullable(rs.findByRole(rolestring)).orElse(new Role(rolestring));
-        if (probrole == null) {
-            System.out.println(probrole);
-            Role role = new Role(rolestring);
-            role.setRole(rolestring);
-            user.setRoles(Collections.singleton(role));
-        } else {
-            user.setRoles(Collections.singleton(probrole));
-        }
+    public String create(@ModelAttribute User user) {
         us.add(user);
         return "redirect:/admin";
     }
@@ -70,9 +61,7 @@ public class UserController {
     }
 
     @PostMapping("/admin/edit")
-    public String update(User user, @RequestParam("id") int id,
-                         @RequestParam("role") String role) {
-        user.setRoles(Collections.singleton(rs.findByRole(role)));
+    public String update(User user, @RequestParam("id") int id) {
         us.updateUserById(user, id);
         return "redirect:/admin";
     }

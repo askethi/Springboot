@@ -34,7 +34,7 @@ public class RoleService {
     }
 
     @Transactional
-    public void updateUserById(Role role, Long id) {
+    public void updateRoleById(Role role, Integer id) {
         role.setId(id);
         roleDao.save(role); }
 
