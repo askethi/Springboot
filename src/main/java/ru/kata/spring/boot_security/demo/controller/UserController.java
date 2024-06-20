@@ -8,6 +8,8 @@ import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserServiceImp;
 
+import java.security.Principal;
+
 @Controller
 public class UserController {
 
@@ -27,16 +29,20 @@ public class UserController {
     }
 
     @GetMapping("/admin")
-    public String index(Model model) {
+    public String index(Model model, Principal principal) {
+        model.addAttribute("user", userService.findByUsername(principal.getName()));
         model.addAttribute("users", userService.listUsers());
-        return "users/index";
+        model.addAttribute("activeTab", "usersTable");
+        model.addAttribute("roles", roleService.listRoles());
+        return "users/admin";
     }
 
     @GetMapping("/admin/new")
     public String newUser(Model model) {
         model.addAttribute("user", new User());
-        model.addAttribute("roles", roleService.listRoles());
-        return "users/new";
+        //model.addAttribute("roles", roleService.listRoles());
+        model.addAttribute("activeTab", "addUser");
+        return "users/admin";
     }
 
     @PostMapping("/admin")
@@ -48,8 +54,8 @@ public class UserController {
     @GetMapping("/admin/edit")
     public String edit(Model model, @RequestParam("id") int id) {
         model.addAttribute("user", userService.getUserById(id));
-        model.addAttribute("roles", roleService.listRoles());
-        return "users/edit";
+        //model.addAttribute("roles", roleService.listRoles());
+        return "users/admin";
     }
 
     @PostMapping("/admin/edit")
@@ -61,7 +67,7 @@ public class UserController {
     @GetMapping("/admin/show")
     public String show(@RequestParam("id") int id, Model model) {
         model.addAttribute("user", userService.getUserById(id));
-        return "users/show";
+        return "user";
     }
 
     @PostMapping("/admin/delete")
